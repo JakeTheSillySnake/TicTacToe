@@ -2,19 +2,36 @@
     ViewData["Title"] = "Tic-Tac-Toe";
 }
 @model TicTacToe.Domain.CurrentGame
+<script>
+    function toggle(id) {
+        var elems = document.getElementsByClassName('radio-tile');
+        for (let i = 0; i < elems.length; i++) {
+            elems[i].innerHTML = "";
+        }
+        document.getElementById(id).innerHTML = "X";
+        document.getElementById('action').value = id;
+        //console.log(id);
+    }
+</script>
+@section Scripts {
+    <script>
+        toggle(1000);
+    </script>
+}
 
 <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full field-grid">
     <div class="grid grid-cols-3 gap-4 text-center">
         @for (int i = 0; i < 3; i++) {
                 @for (int j = 0; j < 3; j++) {
+                    var id = i * 100 + j;
                     if (Model.gameBoard.field[i,j] == 1) {
-                        <div class="square bg-gray-200" disabled>X</div>
+                        <div class="square bg-gray-200">X</div>
                     } else if (Model.gameBoard.field[i,j] == 2) {
-                        <div class="square bg-gray-200" disabled>O</div>
+                        <div class="square bg-gray-200">O</div>
                     } else {
                         <div class="input-container">
-                            <input type="radio" name="fieldBox" class="btn-radio"/>
-                            <div class="radio-tile square bg-gray-200"></div>
+                            <input type="radio" name="fieldBox" class="btn-radio" value="@id" onclick="toggle(this.value)"/>
+                            <div class="radio-tile square bg-gray-200" id="@id"></div>
                         </div>
                     }
                 }
@@ -24,6 +41,7 @@
         @if (Model.IsOver().status) {
             <button class="field btn-new btn-next" asp-controller="Game" asp-action="NewGame">Restart</button>
         } else {
+            <input type="hidden" name="action" id="action" value=""/>
             <button class="field btn-new btn-next" name="next" value="Next">Next</button>
         }
     </form>

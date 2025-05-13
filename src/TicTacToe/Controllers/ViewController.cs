@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-// using TicTacToe.Domain;
 using TicTacToe.Data;
 using TicTacToe.DI;
+using TicTacToe.Web;
 
 namespace TicTacToe.Controllers;
 
@@ -12,7 +12,6 @@ public class GameController : Controller {
   private readonly ILogger<GameController> _logger;
   public Configuration config = new();
   public StorageHandler storageHandler;
-  public string currId = "";
 
   public GameController(ILogger<GameController> logger) {
     _logger = logger;
@@ -23,39 +22,58 @@ public class GameController : Controller {
 
   [Route("new")]
   public IActionResult NewGame() {
+    // make async
     if (!ModelState.IsValid) {
-      return BadRequest(ModelState);
+      return RedirectToAction("Error", new { code = 400 });
     }
     CurrentGameEntity game = new();
     storageHandler.SaveCurrentGame(game);
-    // redirect to url with resource
     return RedirectToAction("GetGame", new { game.uuid });
   }
 
   [HttpGet("{uuid}")]
   public ActionResult<CurrentGameEntity> GetGame(string uuid) {
+    // pass web entity as param
+    // make async
     var game = storageHandler.GetCurrentGameEntity(uuid);
     if (game == null)
-      return NotFound();
+      return RedirectToAction("Error", new { code = 404 });
     return View(DomainDataMapper.CurrentGameToDomain(game));
   }
 
   [HttpPost("{uuid}")]
   public IActionResult UpdateGame(string uuid) {
+    // pass web entity, make async
     var gameEntity = storageHandler.GetCurrentGameEntity(uuid);
     if (gameEntity == null)
-      return NotFound();
+      return RedirectToAction("Error", new { code = 404 });
     var game = DomainDataMapper.CurrentGameToDomain(gameEntity);
-    if (!game.IsOver().status) {
-      game.NextMove();
-    }
+
+    string? action = Request.Form["action"];
+    if (string.IsNullOrEmpty(action))
+      return RedirectToAction("GetGame", new { game.uuid });
+    _ = int.TryParse(action, out int act);
+    int j = act % 100, i = act / 100;
+
+    if (game.IsValid(i, j))
+      game.gameBoard.field[i, j] = CurrentGameEntity.player;
+    if (!game.IsOver().status)
+      gameEntity.gameBoard =
+          DomainDataMapper.GameBoardToEntity(game.NextMove());
     return RedirectToAction("GetGame", new { game.uuid });
   }
 
-  /*[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None,
+  [Route("error")]
+  [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None,
                  NoStore = true)]
-  public IActionResult Error() {
-    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ??
-                                                 HttpContext.TraceIdentifier });
-  }*/
+  public IActionResult Error(int code) {
+    string desc;
+    if (code == 404)
+      desc = "Not found: the page you're looking for doesn't exist.";
+    else if (code == 400)
+      desc = "Bad request.";
+    else
+      desc = "Something went wrong.";
+    return View(new ErrorViewModel { Code = code, Description = desc });
+  }
 }

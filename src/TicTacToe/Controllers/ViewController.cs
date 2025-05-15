@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using TicTacToe.Data;
+using TicTacToe.DataSource;
 using TicTacToe.DI;
 using TicTacToe.Web;
 
@@ -11,7 +11,7 @@ namespace TicTacToe.Controllers;
 public class GameController : Controller {
   private readonly ILogger<GameController> _logger;
   public Configuration config = new();
-  public StorageHandler storageHandler;
+  public IRepository storageHandler;
 
   public GameController(ILogger<GameController> logger) {
     _logger = logger;
@@ -21,30 +21,28 @@ public class GameController : Controller {
   public IActionResult Index() { return View(); }
 
   [Route("new")]
-  public IActionResult NewGame() {
-    // make async
+  public async Task<IActionResult> NewGame() {
     if (!ModelState.IsValid) {
       return RedirectToAction("Error", new { code = 400 });
     }
     CurrentGameEntity game = new();
-    storageHandler.SaveCurrentGame(game);
+    await storageHandler.SaveCurrentGame(game);
     return RedirectToAction("GetGame", new { game.uuid });
   }
 
   [HttpGet("{uuid}")]
-  public ActionResult<CurrentGameEntity> GetGame(string uuid) {
+  public async Task<ActionResult<CurrentGameEntity>> GetGame(string uuid) {
     // pass web entity as param
-    // make async
-    var game = storageHandler.GetCurrentGameEntity(uuid);
+    var game = await storageHandler.GetCurrentGameEntity(uuid);
     if (game == null)
       return RedirectToAction("Error", new { code = 404 });
     return View(DomainDataMapper.CurrentGameToDomain(game));
   }
 
   [HttpPost("{uuid}")]
-  public IActionResult UpdateGame(string uuid) {
-    // pass web entity, make async
-    var gameEntity = storageHandler.GetCurrentGameEntity(uuid);
+  public async Task<IActionResult> UpdateGame(string uuid) {
+    // pass web entity
+    var gameEntity = await storageHandler.GetCurrentGameEntity(uuid);
     if (gameEntity == null)
       return RedirectToAction("Error", new { code = 404 });
     var game = DomainDataMapper.CurrentGameToDomain(gameEntity);

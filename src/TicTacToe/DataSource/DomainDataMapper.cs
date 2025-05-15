@@ -1,4 +1,4 @@
-namespace TicTacToe.Data;
+namespace TicTacToe.DataSource;
 
 using TicTacToe.Domain;
 

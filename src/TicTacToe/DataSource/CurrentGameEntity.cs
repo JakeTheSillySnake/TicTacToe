@@ -1,6 +1,4 @@
-using System.Drawing;
-
-namespace TicTacToe.Data;
+namespace TicTacToe.DataSource;
 
 public class CurrentGameEntity {
   public GameBoardEntity gameBoard = new();

@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace TicTacToe.Web;
 
 public class CurrentGameWebEntity {

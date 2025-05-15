@@ -1,6 +1,6 @@
-namespace TicTacToe.Data;
+namespace TicTacToe.DataSource;
 
 public interface IRepository {
-  public void SaveCurrentGame(CurrentGameEntity currentGameEntity);
-  public CurrentGameEntity? GetCurrentGameEntity(string uuid);
+  public Task SaveCurrentGame(CurrentGameEntity currentGameEntity);
+  public Task<CurrentGameEntity?> GetCurrentGameEntity(string uuid);
 }

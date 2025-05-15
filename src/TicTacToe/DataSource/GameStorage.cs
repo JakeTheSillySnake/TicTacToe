@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace TicTacToe.Data;
+namespace TicTacToe.DataSource;
 
 public class GameStorage {
   private static GameStorage? instance;

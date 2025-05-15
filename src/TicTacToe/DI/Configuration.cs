@@ -1,6 +1,6 @@
 namespace TicTacToe.DI;
 
-using TicTacToe.Data;
+using TicTacToe.DataSource;
 
 public class Configuration {
   public GameStorage storage;

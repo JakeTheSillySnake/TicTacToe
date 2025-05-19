@@ -3,7 +3,7 @@ namespace TicTacToe.Domain;
 public class CurrentGame : IService {
   public GameBoard gameBoard = new();
   public string uuid = "";
-  public static int player = 1, opponent = 2;
+  public const int size = 3, player = 1, opponent = 2;
   public CurrentGame() { uuid = Guid.NewGuid().ToString(); }
   public CurrentGame(int[,] field, string uuid) {
     gameBoard = new(field);
@@ -12,8 +12,8 @@ public class CurrentGame : IService {
 
   public GameBoard NextMove() {
     int row = -1, col = -1, bestVal = 1000;
-    for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < size; i++)
+      for (int j = 0; j < size; j++) {
         if (gameBoard.field[i, j] == 0) {
           // compute value for this move
           gameBoard.field[i, j] = opponent;
@@ -44,8 +44,8 @@ public class CurrentGame : IService {
     if (isMax) {
       // compute maximiser's move
       int best = -10000;
-      for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+      for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
           if (gameBoard.field[i, j] == 0) {
             gameBoard.field[i, j] = player;
             // choose max value
@@ -58,8 +58,8 @@ public class CurrentGame : IService {
     } else {
       // compute minimiser's move
       int best = 10000;
-      for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+      for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
           if (gameBoard.field[i, j] == 0) {
             gameBoard.field[i, j] = opponent;
             // choose min value
@@ -73,8 +73,8 @@ public class CurrentGame : IService {
   }
 
   public bool MovesLeft(GameBoard board) {
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < size; i++) {
+      for (int j = 0; j < size; j++) {
         if (board.field[i, j] == 0)
           return true;
       }
@@ -84,7 +84,7 @@ public class CurrentGame : IService {
 
   public bool IsValid(int row, int col) {
     var board = gameBoard;
-    if (row >= 0 && row < 4 && col >= 0 && col < 4 &&
+    if (row >= 0 && row < size + 1 && col >= 0 && col < size + 1 &&
         gameBoard.field[row, col] == 0)
       return true;
     return false;
@@ -95,7 +95,7 @@ public class CurrentGame : IService {
     bool over = false;
     int winner = 0;
     // check rows
-    for (int row = 0; row < 3 && !over; row++) {
+    for (int row = 0; row < size && !over; row++) {
       if (gameBoard.field[row, 0] == gameBoard.field[row, 1] &&
           gameBoard.field[row, 0] == gameBoard.field[row, 2] &&
           gameBoard.field[row, 0] != 0) {
@@ -104,7 +104,7 @@ public class CurrentGame : IService {
       }
     }
     // check columns
-    for (int col = 0; col < 3 && !over; col++) {
+    for (int col = 0; col < size && !over; col++) {
       if (gameBoard.field[0, col] == gameBoard.field[1, col] &&
           gameBoard.field[0, col] == gameBoard.field[2, col] &&
           gameBoard.field[0, col] != 0) {

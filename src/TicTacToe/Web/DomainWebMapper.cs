@@ -12,8 +12,9 @@ public class DomainWebMapper {
   }
   public static CurrentGameWebEntity
   CurrentGameToEntity(CurrentGame currentGame) {
+    var res = currentGame.IsOver();
     return new CurrentGameWebEntity(currentGame.gameBoard.field,
-                                    currentGame.uuid);
+                                    currentGame.uuid, res.status, res.winner);
   }
   public static CurrentGame
   CurrentGameToDomain(CurrentGameWebEntity currentGameEntity) {

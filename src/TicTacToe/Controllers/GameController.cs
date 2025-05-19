@@ -6,7 +6,7 @@ using TicTacToe.Web;
 
 namespace TicTacToe.Controllers;
 
-[Route("tictactoe/[controller]")]
+[Route("game")]
 [ApiController]
 public class GameController : Controller {
   private readonly ILogger<GameController> _logger;
@@ -32,29 +32,33 @@ public class GameController : Controller {
 
   [HttpGet("{uuid}")]
   public async Task<ActionResult<CurrentGameEntity>> GetGame(string uuid) {
-    // pass web entity as param
-    var game = await storageHandler.GetCurrentGameEntity(uuid);
-    if (game == null)
-      return RedirectToAction("Error", new { code = 404 });
-    return View(DomainDataMapper.CurrentGameToDomain(game));
-  }
-
-  [HttpPost("{uuid}")]
-  public async Task<IActionResult> UpdateGame(string uuid) {
-    // pass web entity
     var gameEntity = await storageHandler.GetCurrentGameEntity(uuid);
     if (gameEntity == null)
       return RedirectToAction("Error", new { code = 404 });
     var game = DomainDataMapper.CurrentGameToDomain(gameEntity);
+    return View(DomainWebMapper.CurrentGameToEntity(game));
+  }
 
-    string? action = Request.Form["action"];
+  [HttpPost("{uuid}")]
+  public async Task<IActionResult>
+  UpdateGame([FromForm] CurrentGameWebEntity currentGameWeb) {
+    var gameEntity =
+        await storageHandler.GetCurrentGameEntity(currentGameWeb.uuid);
+    if (gameEntity == null)
+      return RedirectToAction("Error", new { code = 404 });
+
+    var game = DomainDataMapper.CurrentGameToDomain(gameEntity);
+    string? action = currentGameWeb.action;
     if (string.IsNullOrEmpty(action))
       return RedirectToAction("GetGame", new { game.uuid });
+
     _ = int.TryParse(action, out int act);
     int j = act % 100, i = act / 100;
-
     if (game.IsValid(i, j))
       game.gameBoard.field[i, j] = CurrentGameEntity.player;
+    else
+      return RedirectToAction("Error", new { code = 400 });
+
     if (!game.IsOver().status)
       gameEntity.gameBoard =
           DomainDataMapper.GameBoardToEntity(game.NextMove());
@@ -69,7 +73,7 @@ public class GameController : Controller {
     if (code == 404)
       desc = "Not found: the page you're looking for doesn't exist.";
     else if (code == 400)
-      desc = "Bad request.";
+      desc = "Bad request: you're trying to perform an illegal action.";
     else
       desc = "Something went wrong.";
     return View(new ErrorViewModel { Code = code, Description = desc });

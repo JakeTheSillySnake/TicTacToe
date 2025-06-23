@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model TicTacToe.Web.Models.SignUpRequest
+
+<script>
+    function updatePattern(passwordStr) {
+        document.getElementById("confirm_psw").pattern = passwordStr;
+    }
+</script>
+@section Scripts {
+    <script>
+        updatePattern("");
+    </script>
+}
+
+<div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full field-grid">
+    <strong><h4 class="text-center header">Register</h4></strong>
+    <div>
+        @if (Model.loginExists) {
+            <p class="text-danger">Login already exists.</p>
+        }
+        <form method="post">
+            <label asp-for="Login" class="control-label">Login</label>
+            <input asp-for="Login" class="form-control" pattern="[a-zA-Z0-9]{5,20}" title="Must be at 5-20 characters, only letters and numbers allowed." required/>
+            
+            <label asp-for="Password" class="control-label">Password</label>
+            <input type="password" asp-for="Password" class="form-control" onchange="updatePattern(this.value)" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be at least 8 characters and contain at least one number, an uppercase and lowercase letter." required/>
+            <label asp-for="Password" class="control-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_psw" pattern="" title="Passwords must match." required/>
+            <div class="text-center">
+                <input type="submit" value="Submit" class="btn-new btn-next"/>
+            </div>
+        </form>
+    </div>
+</div>

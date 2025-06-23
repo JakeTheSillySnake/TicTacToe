@@ -1,0 +1,13 @@
+﻿@model TicTacToe.Web.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1><strong class="text-danger">Error @Model.Code</strong> </h1>
+
+@if (Model.ShowRequestId)
+{
+    <h2>
+        <code>@Model.Description</code>
+    </h2>
+}

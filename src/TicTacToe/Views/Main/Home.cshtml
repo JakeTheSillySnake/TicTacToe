@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model TicTacToe.Web.Models.UserDAO
+
+<div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full field-grid">
+    <form action="" method="" class="text-center">
+        <p class="header mb-4">TicTacToe</p>
+        <a href="/game/new-solo" class="btn-new d-block mt-1">Solo Game</a>
+        <a href="/game/new-multi" class="btn-new d-block mt-1">Multiplayer</a>
+        <a href="/game/all" class="btn-new d-block mt-1">Available Games</a>
+        <a href="/game/user/@Model.Uuid" class="btn-new d-block mt-1">Profile</a>
+    </form>
+</div>

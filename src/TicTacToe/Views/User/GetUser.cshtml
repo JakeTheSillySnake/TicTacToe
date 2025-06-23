@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model TicTacToe.Web.Models.UserDAO
+
+<div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full field-grid">
+    <strong><h4 class="text-center header">Profile</h4></strong>
+
+    <div>
+        <strong><label>UUID String</label></strong>
+        <p>@Model.Uuid</p>
+        <strong><label>Login</label></strong>
+        <p>@Model.Login</p>
+        <strong><label>Change Password</label></strong>
+        <form method="post" onsubmit="return alert('Password changed successfully.')">
+            <input type="hidden" asp-for="Uuid" value="@Model.Uuid"/>
+            <input type="hidden" asp-for="Login" value="@Model.Login"/>
+
+            <label class="control-label">Current Password</label>
+            <input  type="password" class="form-control" pattern="@Model.Password" required title="Must match the current password." />
+            
+            <label asp-for="Password" class="control-label">New Password</label>
+            <input type="password" asp-for="Password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be at least 8 characters and contain at least one number, an uppercase and lowercase letter." required/>
+            <div class="user-btns">
+                <input type="submit" value="Save" class="btn-new btn-next" />
+                <a href="@Model.Uuid/delete" class="btn-delete btn-next" onclick="return confirm('Delete profile?\nWarning: this action cannot be reversed.')">Delete</a>
+            </div>
+        </form>
+    </div>
+</div>

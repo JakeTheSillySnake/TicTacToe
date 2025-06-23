@@ -1,0 +1,68 @@
+﻿@using TicTacToe.DataSource.Enum;
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model TicTacToe.Web.Models.CurrentGameDAO
+<script>
+    function toggle(id, isPlayerX) {
+        var elems = document.getElementsByClassName('radio-tile');
+        for (let i = 0; i < elems.length; i++) {
+            elems[i].innerHTML = "";
+        }
+        if (isPlayerX) {
+            document.getElementById(id).innerHTML = "X";
+        } else {
+            document.getElementById(id).innerHTML = "O";
+        }
+        document.getElementById('action').value = id;
+    }
+</script>
+@section Scripts {
+    <script>
+        toggle(1000, false);
+    </script>
+}
+<meta http-equiv="refresh" content="5"/>
+
+<div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full field-grid">
+    <div class="grid grid-cols-3 gap-4 text-center">
+        @for (int i = 0; i < CurrentGameDAO.size; i++) {
+                @for (int j = 0; j < CurrentGameDAO.size; j++) {
+                    var id = i * 100 + j;
+                    if (Model.GameBoard.Field[i,j] == CurrentGameDAO.playerX) {
+                        <div class="square bg-gray-200">X</div>
+                    } else if (Model.GameBoard.Field[i,j] == CurrentGameDAO.playerO) {
+                        <div class="square bg-gray-200">O</div>
+                    } else {
+                        <div class="input-container">
+                            <input type="radio" name="fieldBox" class="btn-radio" value="@id" onclick="toggle(this.value, @Model.IsPlayerX.ToString().ToLower())"/>
+                            <div class="radio-tile square bg-gray-200" id="@id"></div>
+                        </div>
+                    }
+                }
+            }
+    </div>
+    <form action="" method="post" class="text-center">
+        @if (Model.State == (int)GameStates.WAIT) {
+            <div class="winner text-center">Waiting for other player...</div>
+        } else if (Model.State == (int)GameStates.PLAYERX_TURN) {
+            <div class="winner text-center">Turn of Player X</div>
+        } else if (Model.State == (int)GameStates.PLAYERO_TURN) {
+            <div class="winner text-center">Turn of Player O</div>
+        } else if (Model.State == (int)GameStates.PLAYERX_WIN) {
+               <div class="winner">Player X won!</div>
+        } else if (Model.State == (int)GameStates.PLAYERO_WIN) {
+            <div class="winner">Player O won!</div>
+        } else if (Model.State == (int)GameStates.DRAW) {
+           <div class="winner">It's a tie!</div>
+        }
+        @if (Model.State >= (int)GameStates.PLAYERX_WIN) {
+            <button class="field btn-new btn-next" asp-controller="Main" asp-action="Home">Return</button>
+        } else if(Model.State >= (int)GameStates.WAIT) {
+            <input type="hidden" name="action" id="action" value=""/>
+            <input type="hidden" name="uuid" id="uuid" value="@Model.Uuid"/>
+            <input type="hidden" name="gameBoard" id="gameBoard" value="@Model.GameBoard"/>
+            <button class="field btn-new btn-next" name="next" value="Next">Next</button>
+        }
+    </form>
+</div>

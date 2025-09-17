@@ -1,0 +1,45 @@
+@using TicTacToe.DataSource.Enum
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model IEnumerable<TicTacToe.Web.Models.UserWinRatioDAO>
+
+<script>
+        function updateLink(value) {
+        document.getElementById("leaderAnchor").href = "/game/leaders/" + value;
+    }
+</script>
+
+@section Scripts {
+    <script>
+        updateLink(5)
+    </script>
+}
+
+<div class="bg-white p-8 rounded-lg shadow-md w-full mx-auto mt-1">
+<table class="table table-fixed">
+    <tr class="row">
+        <td class="col text-center">
+            <span class="display-span">Display limit:</span>
+            <input class="form-control w-20 d-inline" type="number" min="1" value="@Context.Request.RouteValues["n"]?.ToString()" onchange="updateLink(this.value)">
+            <a class="btn-go d-inline" href="#" id="leaderAnchor">Go</a>
+        </td>
+    </tr>
+@foreach (var user in Model) 
+{ 
+    <tr class="row">
+        <td class="col"><strong>User ID:</strong> @user.Uuid</td>
+        <td class="col text-center"><strong>Name:</strong> @user.Name</td>
+        <td class="col text-center"><strong>Won:</strong> @user.Wins / @user.Total games</td>
+        <td class="col text-center"><strong>Win ratio:</strong> @user.WinRatio.ToString("F1") %</td>
+    </tr>
+}
+
+@if (Model.Count() == 0)
+{
+    <div class="bg-white p-8 rounded-lg shadow-md w-full mx-auto mt-1">
+       <h6 class="text-center">No users are available.</h6>
+    </div>
+}
+</table>
+</div>

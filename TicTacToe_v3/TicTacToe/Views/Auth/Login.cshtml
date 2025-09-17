@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model TicTacToe.Web.Models.JwtRequest
+
+<div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full field-grid">
+    <strong><h4 class="text-center header">Welcome!</h4></strong>
+    <div>
+        @if (Model.IncorrectData) {
+            <p class="text-danger">Incorrect login or password.</p>
+        }
+        <form method="post">
+            <label asp-for="Login" class="control-label">Login</label>
+            <input asp-for="Login" class="form-control" required/>
+            
+            <label asp-for="Password" class="control-label">Password</label>
+            <input type="password" asp-for="Password" class="form-control" required/>
+            <div class="text-center">
+                <input type="submit" value="Sign in" class="btn-new btn-next"/>
+            </div>
+        </form>
+    </div>
+</div>

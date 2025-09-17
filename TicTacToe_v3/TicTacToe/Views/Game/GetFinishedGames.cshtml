@@ -1,0 +1,34 @@
+@using TicTacToe.DataSource.Enum
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model IEnumerable<TicTacToe.Web.Models.CurrentGameDAO>
+
+<div class="bg-white p-8 rounded-lg shadow-md w-full mx-auto mt-1">
+<table class="table table-fixed">
+@foreach (var game in Model) 
+{
+        <tr class="row">
+            <td class="col"><strong>Created:</strong> @game.CreationDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+            <td class="col"><strong>UUID:</strong> @game.Uuid</td>
+            <td class="col text-center"><strong>Result: 
+                @if (game.State == (int)GameStates.DRAW) {
+                    <span class="text-info">Draw</span>
+                } else if ((game.State == (int)GameStates.PLAYERX_WIN && game.IsPlayerX) 
+                            || (game.State == (int)GameStates.PLAYERO_WIN && !game.IsPlayerX)) {
+                    <span class="text-success">Win</span>
+                } else {
+                    <span class="text-danger">Loss</span>
+                }
+            </strong></td>
+        </tr>
+}
+
+@if (Model.Count() == 0)
+{
+    <div class="bg-white p-8 rounded-lg shadow-md w-full mx-auto mt-1">
+       <h6 class="text-center">No games are available.</h6>
+    </div>
+}
+</table>
+</div>

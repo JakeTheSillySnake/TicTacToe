@@ -1,0 +1,63 @@
+@using TicTacToe.DataSource.Enum
+@{
+    ViewData["Title"] = "Tic-Tac-Toe";
+}
+@model IOrderedEnumerable<TicTacToe.Web.Models.CurrentGameDAO>
+
+
+<div class="bg-white p-8 rounded-lg shadow-md w-full mx-auto mt-1">
+<table class="table table-fixed">
+@foreach (var game in Model) 
+{ 
+        <tr class="row">
+            <td class="col"><strong>Created:</strong> @game.CreationDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+            <td class="col"><strong>UUID:</strong> @game.Uuid</td>
+            @if (game.PlayerO != "")
+            {   
+                <td class="col text-center"><strong>Multiplayer</strong></td>
+                <td class="col text-center"><strong>
+                @if (game.PlayerO == null)
+                {
+                    <a href="/game/@game.Uuid/join" class="text-success">Join</a>
+                }
+                else if (game.State < (int)GameStates.PLAYERX_WIN)
+                { 
+                    <a href="/game/@game.Uuid" class="text-info">Continue</a>
+                }
+                else 
+                {
+                    <a href="/game/@game.Uuid">Review</a>
+                }
+                </strong></td>
+            }
+            else 
+            {   
+                <td class="col text-center"><strong>Solo</strong></td>
+                <td class="col text-center"><strong>
+                @if (game.State < (int)GameStates.PLAYERX_WIN)
+                { 
+                    <a href="/game/@game.Uuid" class="text-info">Continue</a>
+                }
+                else 
+                {
+                    <a href="/game/@game.Uuid">Review</a>
+                }
+                </strong></td>
+            }
+            <td class="col text-center">
+            @if (game.PlayerO != null) 
+            {
+            <a href="/game/@game.Uuid/delete" class="text-danger"><strong>Delete</strong></a>
+            }
+            </td>
+        </tr>
+}
+
+@if (Model.Count() == 0)
+{
+    <div>
+       <h6 class="text-center">No games are available.</h6>
+    </div>
+}
+</table>
+</div>

@@ -1,0 +1,142 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: #2B1D39;
+}
+
+header {
+    background-color: white;
+}
+
+.square {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    font-size: 2em;
+}
+
+.grid {
+    margin-left: 10px;
+}
+
+.field-grid {
+    margin: auto;
+    margin-top: 50px;
+    background-color: white;
+}
+
+.input-container {
+    position: relative;
+}
+
+.btn-radio:hover + .radio-tile {
+    background-color:  rgb(79, 102, 184);
+}
+
+.btn-radio:checked + .radio-tile {
+    background-color: rgb(114, 166, 255);
+}
+
+.btn-radio {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+.header {
+    padding: 60px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 3em;
+    border-radius: 10px;
+}
+
+.btn-new {
+    background-color: rgb(114, 166, 255);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 28px;
+    margin-top: 60px;
+    border-radius: 10px;
+}
+
+.btn-go {
+    background-color: rgb(114, 166, 255);
+    border: none;
+    color: white;
+    padding: 0.55em 1em;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+.btn-new:hover, .btn-go:hover {
+    background-color: rgb(79, 102, 184);
+    color: white;  
+}
+
+.btn-next {
+    margin-top: 30px;
+}
+
+.winner {
+    font-size: 2em;
+    margin-top: 15px;
+}
+
+.btn-delete:link, .btn-delete:visited {
+    margin-right: 0;
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 28px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.btn-delete:hover, .btn-delete:active {
+    background-color: red;
+}
+
+.user-btns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-fixed {
+  table-layout: fixed;
+}
+
+.display-span {
+    margin-right: 8px;
+}
